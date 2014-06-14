@@ -206,7 +206,7 @@ public class StandingsTable extends JTable {
         }
 
         /**
-         * Will get the Claa of the given column index
+         * Will get the Class of the given column index
          * @param columnIndex the column index
          * @return class of the column
          */
