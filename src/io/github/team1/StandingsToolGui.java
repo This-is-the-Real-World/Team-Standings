@@ -17,13 +17,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class StandingsToolGui {
+public class StandingsToolGui {
 
     /**
      * Frame instance and the exit exit menu item in the File JMenu.
      */
     private JFrame frame;
     private JMenuItem exitItem;
+    private JMenuItem aboutItem;
 
     /**
      * Table related fields, the table instance and the search field.
@@ -45,9 +46,14 @@ class StandingsToolGui {
         }};
 
         JMenuBar bar = new JMenuBar();
+        final ItemMenuListener itemMenuListener = new ItemMenuListener();
+
+        JMenu helpMenu = new JMenu("Help");
+        aboutItem = new JMenuItem("About");
+        aboutItem.addActionListener(itemMenuListener);
+
         JMenu fileMenu = new JMenu("File");
         JMenu standingsType = new JMenu("Standings type");
-        final ItemMenuListener itemMenuListener = new ItemMenuListener();
         for (StandingsTable.StandingType t : StandingsTable.StandingType.values()) {
             standingsType.add(new JMenuItem(t.toString()) {{
                 addActionListener(itemMenuListener);
@@ -62,7 +68,9 @@ class StandingsToolGui {
 
         fileMenu.add(standingsType);
         fileMenu.add(exitItem);
+        helpMenu.add(aboutItem);
         bar.add(fileMenu);
+        bar.add(helpMenu);
         frame.setJMenuBar(bar);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -80,17 +88,17 @@ class StandingsToolGui {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            table.filterRows(searchField.getText().trim());
+            table.filterRows(searchField.getText());
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            table.filterRows(searchField.getText().trim());
+            table.filterRows(searchField.getText());
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            table.filterRows(searchField.getText().trim());
+            table.filterRows(searchField.getText());
         }
     }
 
@@ -105,6 +113,11 @@ class StandingsToolGui {
             JMenuItem item = (JMenuItem) e.getSource();
             if (item.equals(exitItem)) {
                 frame.dispose();
+                return;
+            }
+            if(item.equals(aboutItem)){
+                //waiting for Qosmio to finish the about frame, so we can add it here.
+                return;
             }
             for (StandingsTable.StandingType s : StandingsTable.StandingType.values()) {
                 if (item.getText().equals(s.toString())) {
