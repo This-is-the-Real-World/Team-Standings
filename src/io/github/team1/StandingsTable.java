@@ -25,26 +25,33 @@ import java.util.regex.Pattern;
  */
 public class StandingsTable extends JTable {
 
-    /** oauth key used to log in into GitHub */
+    /**
+     * oauth key used to log in into GitHub.
+     */
     private static final String OAUTH = "4ebe91f1a81037996949da2d30ecef6e9bbd8ac4";
 
-    /** GitHub and readMe instance */
+    /**
+     * GitHub and readMe instance.
+     */
     private GitHub gitHub;
     private GHContent readMe;
 
-    /** Current Table model and Standings Type */
+    /**
+     * Current Table model and Standings Type.
+     */
     private StandingType type;
     private StandingsTableModel model;
 
     /**
      * Will create a StandingsTable with TEAM as a default StandingType.
      */
-    public StandingsTable(){
+    public StandingsTable() {
         this(StandingType.TEAM);
     }
 
     /**
      * Will create a new table
+     *
      * @param type Current Standings type, use INDIVIDUAL for individual standings,
      *             or TEAM for team standings.
      */
@@ -55,11 +62,7 @@ public class StandingsTable extends JTable {
             e.printStackTrace();
             return;
         }
-        this.type = type;
-        model = new StandingsTableModel(this);
-        if (fetchReadMe()) parseReadMe();
-
-        setModel(model);
+        setStandingsType(type);
         setAutoCreateRowSorter(true);
         getTableHeader().setReorderingAllowed(false);
     }
@@ -69,32 +72,55 @@ public class StandingsTable extends JTable {
      * It will filter the first column, that means its gonna filter either the team name, or person name.
      * The regex that is used will allow to filter when the name has the characters typed in, is case insensitive, example:
      * patr would only show up the PatriqDesigns row
+     *
      * @param name the name to filter
      */
-    public void filterRows(String name){
+    public void filterRows(String name) {
         RowFilter<StandingsTableModel, Object> rowFilter;
         try {
-            rowFilter = RowFilter.regexFilter("(?i)"+name+"[A-Za-z0-9_ -]*", 0);
+            rowFilter = RowFilter.regexFilter("(?i)" + name + "[A-Za-z0-9_ -]*", 0);
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
         @SuppressWarnings("unchecked")
-        TableRowSorter<StandingsTableModel> rowSorter = ((TableRowSorter)getRowSorter());
+        TableRowSorter<StandingsTableModel> rowSorter = ((TableRowSorter) getRowSorter());
         rowSorter.setRowFilter(rowFilter);
     }
 
     /**
+     * Gets the table's current StandingType.
+     *
+     * @return current StandingType
+     */
+    public StandingType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the StandingsType of the table, and refreshes all the table values.
+     *
+     * @param type we want the table to have
+     */
+    public void setStandingsType(StandingType type) {
+        if (this.type != null && this.type.equals(type)) return;
+        this.type = type;
+        model = new StandingsTableModel(this);
+        if (fetchReadMe() && parseReadMe()) setModel(model);
+    }
+
+    /**
      * Edits the current readMe and gets the new one full committed and pushed.
-     * @param name team or person's name
+     *
+     * @param name   team or person's name
      * @param points The points that we want to update to
      * @return if it was successful committing it and pushing it
      */
     private boolean editReadMe(Object name, Object points) {
-        try{
-            String commit = "Changed "+name+"'s score to "+points+".";
-            readMe = readMe.update(readMe.getContent().replaceAll(name+":([A-Za-z0-9_ -]+)",
-                    name+": "+points.toString()), commit).getContent();
-        }catch (Exception e){
+        try {
+            String commit = "Changed " + name + "'s score to " + points + ".";
+            readMe = readMe.update(readMe.getContent().replaceAll(name + ":([A-Za-z0-9_ -]+)",
+                    name + ": " + points.toString()), commit).getContent();
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -102,6 +128,7 @@ public class StandingsTable extends JTable {
 
     /**
      * Will parse the read me and fill the table with the team or person names.
+     *
      * @return if it was successful getting the readMe content and parsing it
      */
     private boolean parseReadMe() {
@@ -130,6 +157,7 @@ public class StandingsTable extends JTable {
 
     /**
      * Will fetch the readMe file of the current type repository.
+     *
      * @return if it was successful fetching the readMe file
      */
     private boolean fetchReadMe() {
@@ -153,18 +181,18 @@ public class StandingsTable extends JTable {
         TEAM(new String[]{"Team Names", "Points"}),
         INDIVIDUAL(new String[]{"Names", "Points"});
 
-        private String[] tableNames;
+        private final String[] tableNames;
 
         StandingType(String[] tableNames) {
             this.tableNames = tableNames;
         }
 
-        public String[] tableNames(){
+        public String[] tableNames() {
             return tableNames;
         }
 
-        public String repository(){
-            return "This-is-the-Real-World/"+toString()+"-Standings";
+        public String repository() {
+            return "This-is-the-Real-World/" + toString() + "-Standings";
         }
 
         @Override
@@ -178,16 +206,21 @@ public class StandingsTable extends JTable {
      */
     private static class StandingsTableModel extends AbstractTableModel {
 
-        /** A StandingsTable instance */
-        private StandingsTable table;
+        /**
+         * A StandingsTable instance
+         */
+        private final StandingsTable table;
 
-        /** Table names and values */
-        private String[] tableNames;
+        /**
+         * Table names and values
+         */
+        private final String[] tableNames;
         private Object[][] tableValues;
 
         /**
          * Will create a new TableModel to be used in a JTable.
          * Will contain all the tables data and how it should or not handle data editions.
+         *
          * @param table instance of a StandingsTable wheres this model is gonna be used
          */
         private StandingsTableModel(StandingsTable table) {
@@ -197,6 +230,7 @@ public class StandingsTable extends JTable {
 
         /**
          * Will get the name of the given column index.
+         *
          * @param columnIndex the column index
          * @return the column name
          */
@@ -207,6 +241,7 @@ public class StandingsTable extends JTable {
 
         /**
          * Will get the Class of the given column index
+         *
          * @param columnIndex the column index
          * @return class of the column
          */
@@ -232,7 +267,7 @@ public class StandingsTable extends JTable {
         }
 
         /**
-         * @param rowIndex the row index of the cell
+         * @param rowIndex    the row index of the cell
          * @param columnIndex the column index of the cell
          * @return if the cell is editable or not
          */
@@ -244,20 +279,22 @@ public class StandingsTable extends JTable {
         /**
          * Will submit the values to the GitHub upon change, and if its done successfully
          * then will change in the table values
-         * @param aValue the new value
-         * @param rowIndex the row index of the cell that is edited
+         *
+         * @param aValue      the new value
+         * @param rowIndex    the row index of the cell that is edited
          * @param columnIndex the column index of the cell that is edited
          */
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            if (table.editReadMe(tableValues[rowIndex][0], aValue)){
+            if (table.editReadMe(tableValues[rowIndex][0], aValue)) {
                 tableValues[rowIndex][columnIndex] = aValue;
             }
         }
 
         /**
          * Will retrieve the current cell value
-         * @param rowIndex the row index of the cell
+         *
+         * @param rowIndex    the row index of the cell
          * @param columnIndex the column index of the cell
          * @return the value in the cell
          */
