@@ -28,7 +28,7 @@ public class StandingsToolGui {
     private JFrame frame;
     private JMenuItem exitItem;
     private JMenuItem aboutItem;
-    private JMenuItem wikiIten;
+    private JMenuItem wikiItem;
 
     /**
      * Table related fields, the table instance and the search field.
@@ -53,8 +53,8 @@ public class StandingsToolGui {
         final ItemMenuListener itemMenuListener = new ItemMenuListener();
 
         JMenu helpMenu = new JMenu("Help");
-        wikiIten = new JMenuItem("Wiki");
-        wikiIten.addActionListener(itemMenuListener);
+        wikiItem = new JMenuItem("Wiki");
+        wikiItem.addActionListener(itemMenuListener);
         aboutItem = new JMenuItem("About");
         aboutItem.addActionListener(itemMenuListener);
 
@@ -75,7 +75,7 @@ public class StandingsToolGui {
         fileMenu.add(standingsType);
         fileMenu.add(exitItem);
 
-        helpMenu.add(wikiIten);
+        helpMenu.add(wikiItem);
         helpMenu.add(aboutItem);
 
         bar.add(fileMenu);
@@ -160,7 +160,7 @@ public class StandingsToolGui {
                 frame.dispose();
                 return;
             }
-            if(item.equals(wikiIten)){
+            if(item.equals(wikiItem)){
                 browseURL("https://github.com/This-is-the-Real-World/Team-Standings/wiki");
                 return;
             }
