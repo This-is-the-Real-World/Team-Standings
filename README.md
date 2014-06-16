@@ -1,5 +1,5 @@
 TeamStandings
 =============
 
-Team 1: 1<br>
+Team 1: 3<br>
 Team 2: 0
