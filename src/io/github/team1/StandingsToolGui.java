@@ -81,6 +81,20 @@ public class StandingsToolGui {
     }
 
     /**
+     * Creates a frame when the About JItemMenu is clicked.
+     * Contains information about the team, the tool and when it was released.
+     */
+    private void createAboutFrame(){
+        String about = "<html>"
+                + "<b><u>ProjectGitHubStandings v0.01</u></b><br><br>"
+                + "<font size=2><b>Creators:</b> Team *INSERT NAME HERE*<br>"
+                + "<b>Released on</b>: 15/6/2014<br>"
+                + "<b>Team *INSERT NAME HERE*:</b> Qosmiof2, Patriq, Term</b></font>"
+                + "</html>";
+        JOptionPane.showMessageDialog(frame, about, "About", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /**
      * This class will keep track of the text that is inserted in the searchField and will,
      * real time filter the table's rows.
      */
@@ -116,7 +130,7 @@ public class StandingsToolGui {
                 return;
             }
             if(item.equals(aboutItem)){
-                //waiting for Qosmio to finish the about frame, so we can add it here.
+                createAboutFrame();
                 return;
             }
             for (StandingsTable.StandingType s : StandingsTable.StandingType.values()) {
