@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class StandingsToolGui {
 
@@ -91,17 +90,18 @@ public class StandingsToolGui {
 
     /**
      * Opens the default browser and goes to the given url.
+     *
      * @param url that the browser will open
      */
-    private void browseURL(String url){
-        if(Desktop.isDesktopSupported()){
+    private void browseURL(String url) {
+        if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
                 desktop.browse(new URI(url));
-            } catch (IOException | URISyntaxException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             Runtime runtime = Runtime.getRuntime();
             try {
                 runtime.exec("xdg-open " + url);
@@ -115,9 +115,9 @@ public class StandingsToolGui {
      * Creates a frame when the About JItemMenu is clicked.
      * Contains information about the team, the tool and when it was released.
      */
-    private void createAboutFrame(){
+    private void createAboutFrame() {
         String about = "<html>"
-                + "<b><u>ProjectGitHubStandings v0.01</u></b><br><br>"
+                + "<b><u>Team-Standings</u></b><br><br>"
                 + "<font size=2><b>Creators:</b> Team *INSERT NAME HERE*<br>"
                 + "<b>Released on</b>: 15/6/2014<br>"
                 + "<b>Team *INSERT NAME HERE*:</b> Qosmiof2, Patriq, Term</b></font>"
@@ -160,11 +160,11 @@ public class StandingsToolGui {
                 frame.dispose();
                 return;
             }
-            if(item.equals(wikiItem)){
-                browseURL("https://github.com/This-is-the-Real-World/Team-Standings/wiki");
+            if (item.equals(wikiItem)) {
+                browseURL("https://github.com/This-is-the-Real-World/Team-Standings/wiki/How-To-Use");
                 return;
             }
-            if(item.equals(aboutItem)){
+            if (item.equals(aboutItem)) {
                 createAboutFrame();
                 return;
             }
