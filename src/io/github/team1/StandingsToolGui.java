@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 public class StandingsToolGui {
 
     /**
-     * Frame instance and the exit, about and howTo JMenuItem instances.
+     * Frame instance and the exit, about and wiki JMenuItem instances.
      */
     private JFrame frame;
     private JMenuItem exitItem;
