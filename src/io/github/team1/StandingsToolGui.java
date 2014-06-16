@@ -16,15 +16,19 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class StandingsToolGui {
 
     /**
-     * Frame instance and the exit exit menu item in the File JMenu.
+     * Frame instance and the exit, about and howTo JMenuItem instances.
      */
     private JFrame frame;
     private JMenuItem exitItem;
     private JMenuItem aboutItem;
+    private JMenuItem wikiIten;
 
     /**
      * Table related fields, the table instance and the search field.
@@ -49,6 +53,8 @@ public class StandingsToolGui {
         final ItemMenuListener itemMenuListener = new ItemMenuListener();
 
         JMenu helpMenu = new JMenu("Help");
+        wikiIten = new JMenuItem("Wiki");
+        wikiIten.addActionListener(itemMenuListener);
         aboutItem = new JMenuItem("About");
         aboutItem.addActionListener(itemMenuListener);
 
@@ -68,7 +74,10 @@ public class StandingsToolGui {
 
         fileMenu.add(standingsType);
         fileMenu.add(exitItem);
+
+        helpMenu.add(wikiIten);
         helpMenu.add(aboutItem);
+
         bar.add(fileMenu);
         bar.add(helpMenu);
         frame.setJMenuBar(bar);
@@ -78,6 +87,28 @@ public class StandingsToolGui {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         searchField.requestFocus();
+    }
+
+    /**
+     * Opens the default browser and goes to the given url.
+     * @param url that the browser will open
+     */
+    private void browseURL(String url){
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -123,10 +154,14 @@ public class StandingsToolGui {
     private class ItemMenuListener implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            JMenuItem item = (JMenuItem) e.getSource();
+        public void actionPerformed(ActionEvent a) {
+            JMenuItem item = (JMenuItem) a.getSource();
             if (item.equals(exitItem)) {
                 frame.dispose();
+                return;
+            }
+            if(item.equals(wikiIten)){
+                browseURL("https://github.com/This-is-the-Real-World/Team-Standings/wiki");
                 return;
             }
             if(item.equals(aboutItem)){
